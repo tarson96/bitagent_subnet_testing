@@ -24,8 +24,8 @@ from bitagent.miners.context_util import get_relevant_context_and_citations_from
 
 def miner_init(self, config=None):
     transformers.logging.set_verbosity_error()
-    self.tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large", legacy=False)
-    self.model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-large", device_map=self.device)
+    self.tokenizer = T5Tokenizer.from_pretrained("philschmid/flan-t5-base-samsum", legacy=False)
+    self.model = T5ForConditionalGeneration.from_pretrained("philschmid/flan-t5-base-samsum", device_map=self.device)
 
     def llm(input_text):
         input_ids = self.tokenizer(input_text, return_tensors="pt").input_ids.to(self.device)
