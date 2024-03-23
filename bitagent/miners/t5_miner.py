@@ -24,6 +24,7 @@ from bitagent.miners.context_util import get_relevant_context_and_citations_from
 
 def miner_init(self, config=None):
     transformers.logging.set_verbosity_error()
+    print("Model being used --- ", "philschmid/flan-t5-base-samsum")
     self.tokenizer = T5Tokenizer.from_pretrained("philschmid/flan-t5-base-samsum", legacy=False)
     self.model = T5ForConditionalGeneration.from_pretrained("philschmid/flan-t5-base-samsum", device_map=self.device)
 
