@@ -25,6 +25,7 @@ def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron
     max_reward = 1.0
     try:
         print("response received -----> ", response)
+        print("expected answer -----> ", response)
         response = response.response['response']
     except KeyError:
         reward = -0.5
