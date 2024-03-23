@@ -24,9 +24,9 @@ from bitagent.miners.context_util import get_relevant_context_and_citations_from
 
 def miner_init(self, config=None):
     transformers.logging.set_verbosity_error()
-    print("Model being used --- ", "Joemgu/pegasus-x-sumstew")
-    self.tokenizer = T5Tokenizer.from_pretrained("Joemgu/pegasus-x-sumstew", legacy=False)
-    self.model = T5ForConditionalGeneration.from_pretrained("Joemgu/pegasus-x-sumstew", device_map=self.device)
+    print("Model being used --- ", "jordiclive/flan-t5-3b-summarizer")
+    self.tokenizer = T5Tokenizer.from_pretrained("jordiclive/flan-t5-3b-summarizer", legacy=False)
+    self.model = T5ForConditionalGeneration.from_pretrained("jordiclive/flan-t5-3b-summarizer", device_map=self.device)
 
     def llm(input_text):
         input_ids = self.tokenizer(input_text, return_tensors="pt").input_ids.to(self.device)
