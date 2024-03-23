@@ -25,7 +25,7 @@ def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron
     max_reward = 1.0
     try:
         print("response received -----> ", response)
-        print("expected answer -----> ", response)
+        print("expected answer -----> ", expected_answer)
         response = response.response['response']
     except KeyError:
         reward = -0.5
@@ -36,6 +36,7 @@ def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron
     if str(expected_answer) in response and len(numbers) == 1:
         reward = max_reward
         feedback = good_message(f"You responded with a valid answer.")
+        print("You responded with a valid answer (your answer = expected answer) --> ",response," = ", expected_answer)
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
     elif str(expected_answer) in response:
         reward = max_reward
@@ -50,5 +51,6 @@ def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
     
     reward = 0.0
+    print("You responded with wrong answer ( yours != expected ) -->  ",response," != ", expected_answer)
     feedback = bad_message(f"You failed to respond with the correct answer: {expected_answer}.")
     return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
