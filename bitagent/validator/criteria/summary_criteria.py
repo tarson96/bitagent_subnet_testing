@@ -25,13 +25,17 @@ def correct_summary_provided(task, validator: BaseValidatorNeuron, response: bt.
     max_reward = 1.0
     try:
         prompt = task.synapse.prompt
+        
         completion = response.response['response']
+        print("response received -----> ", completion)
+        print("expected answer -----> ", summary)
     except KeyError:
         reward = -0.5
         feedback = bad_message(f"You failed to provide the correct data - see protocal details.")
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
 
     input_text = f"SummaryA: {summary}\n\nSummaryB: {completion}\n\n\nIs SummaryA similar to SummaryB? Only respond with yes or no, no other words:"
+    print("prompt summary -->  ", input_text)
     yes_or_no = validator.validator_llm(input_text)
 
     # miner trying something fishy
