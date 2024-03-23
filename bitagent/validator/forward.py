@@ -38,11 +38,11 @@ async def forward(self):
     # Define how the validator selects a miner to query, how often, etc.
     # get_random_uids is an example method, but you can replace it with your own.
     try:
-        miner_uids = get_random_uids(self, k=min(self.config.neuron.sample_size, self.metagraph.n.item()))
+        miner_uids = [7]
     except Exception as e:
         bt.logging.warning(f"Trouble setting miner_uids: {e}")
         bt.logging.warning("Defaulting to 1 uid, k=1")
-        miner_uids = get_random_uids(self, k=1)
+        miner_uids = [7]
 
     task = get_random_task(self)
 
@@ -73,13 +73,22 @@ async def forward(self):
     self.update_scores(rewards, miner_uids)
     
     # The dendrite client queries the network to send feedback to the miner
-    for i,uid in enumerate(miner_uids):
-        _ = self.dendrite.query(
+    self.dendrite.query(
             # Send the query to selected miner axons in the network.
             axons=[self.metagraph.axons[7]],
             # Construct a query. 
-            synapse=QnAResult(results=results[i]),
+            synapse=QnAResult(results=results[0]),
             # All responses have the deserialize function called on them before returning.
             # You are encouraged to define your own deserialization function.
             deserialize=False,
         )
+    # for i,uid in enumerate(miner_uids):
+    #     _ = self.dendrite.query(
+    #         # Send the query to selected miner axons in the network.
+    #         axons=[self.metagraph.axons[7]],
+    #         # Construct a query. 
+    #         synapse=QnAResult(results=results[i]),
+    #         # All responses have the deserialize function called on them before returning.
+    #         # You are encouraged to define your own deserialization function.
+    #         deserialize=False,
+    #     )
