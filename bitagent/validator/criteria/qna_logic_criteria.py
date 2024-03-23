@@ -24,6 +24,7 @@ from bitagent.validator.criteria.utils import good_message, bad_message, receive
 def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron, response: bt.Synapse, expected_answer: int) -> [float, float, str]:
     max_reward = 1.0
     try:
+        print("response received -----> ", response)
         response = response.response['response']
     except KeyError:
         reward = -0.5
