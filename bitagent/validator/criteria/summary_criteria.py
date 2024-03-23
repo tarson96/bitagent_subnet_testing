@@ -37,6 +37,7 @@ def correct_summary_provided(task, validator: BaseValidatorNeuron, response: bt.
     input_text = f"SummaryA: {summary}\n\nSummaryB: {completion}\n\n\nIs SummaryA similar to SummaryB? Only respond with yes or no, no other words:"
     print("prompt summary -->  ", input_text)
     yes_or_no = validator.validator_llm(input_text)
+    print("validator evaluation -->  ", yes_or_no)
 
     # miner trying something fishy
     if validator.validator_llm(completion).strip().lower() == "yes":

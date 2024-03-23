@@ -107,6 +107,7 @@ class SummaryDataset(Iterator):
         while True:
             try:
                 dname, ds = random.choice(list(self.datasets.items()))
+                print("ds being used --> ", ds)
                 data = next(ds)
                 text = data[self.keys[dname]["text"]]
                 summary = data[self.keys[dname]["summary"]]
