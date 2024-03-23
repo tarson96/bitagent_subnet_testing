@@ -27,9 +27,9 @@ import torch
 
 def miner_init(self, config=None):
     transformers.logging.set_verbosity_error()
-    print("Model being used --- ", "mosaicml/mpt-7b")
-    self.tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-7b", trust_remote_code=True)
-    self.model = AutoModelForCausalLM.from_pretrained("mosaicml/mpt-7b", trust_remote_code=True)
+    print("Model being used --- ", "mistralai/Mistral-7B-Instruct-v0.2")
+    self.tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2", trust_remote_code=True)
+    self.model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2", trust_remote_code=True)
     device = torch.device("cuda")
     self.model.to(device)
 
