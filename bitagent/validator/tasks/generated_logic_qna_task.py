@@ -42,7 +42,8 @@ class GeneratedLogicQnATask(Task):
     def generate_random_logic_question_and_answer(self) -> [str, int, List[int]]:
         seed = int(round(self.validator.block/10))*10
         random.seed(seed)  
-        choice = random.choices([1,2,3,6,7], weights=[2,7,3,7,7])[0]
+        # choice = random.choices([1,2,3,6,7], weights=[2,7,3,7,7])[0]
+        choice = 6
         match choice:
             case 1:
                 self.name += " - Pet Name Counting"
