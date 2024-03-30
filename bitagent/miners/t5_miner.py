@@ -1,50 +1,58 @@
+# The MIT License (MIT)
+# Copyright © 2023 Yuma Rao
+# Copyright © 2023 RogueTensor
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the “Software”), to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of
+# the Software.
+
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
 import bitagent
 import transformers
 from common.base.miner import BaseMinerNeuron
-from transformers import T5Tokenizer, T5ForConditionalGeneration
+from transformers import T5Tokenizer, T5ForConditionalGeneration,pipeline
 from bitagent.miners.context_util import get_relevant_context_and_citations_from_synapse
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import bittensor as bt
-import torch
-from transformers import pipeline
-# from Model_Test_Miner import Json_To_Vector ,Response
-from Miner_Response import Miner_Model
+import sys
+
 def miner_init(self, config=None):
     transformers.logging.set_verbosity_error()
-    # self.tokenizer =  AutoTokenizer.from_pretrained("HuggingFaceH4/zephyr-7b-beta",legacy=False)
-    # self.model = AutoModelForCausalLM.from_pretrained("HuggingFaceH4/zephyr-7b-beta", device_map=self.device)
-    # pipe = pipeline("text-generation", model="HuggingFaceH4/zephyr-7b-beta", torch_dtype=torch.bfloat16, device_map="auto")
-    # self.tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large", legacy=False)
-    # self.model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-large", device_map=self.device)
-    # self.tokenizer = AutoTokenizer.from_pretrained("TheBloke/zephyr-7B-beta-GPTQ", device_map=self.device)
-    # self.model = AutoModelForCausalLM.from_pretrained("TheBloke/zephyr-7B-beta-GPTQ", device_map=self.device)
-    bt.logging.debug("Loading model Zephyr 1111")
-    
-def llm(input_text):
-    result = Miner_Model(input_text)
-    bt.logging.info(f"Response From Zephyr : >>>>>>>>{result}")
-    bt.logging.info("Loading model Zephyr 3333")
-    # response is typically: <pad> text</s>
-    # result = result.replace("<pad>","").replace("</s>","").strip()
-    return result
+    self.tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-large", legacy=False)
+    self.model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-large", device_map=self.device)
+    summarizer = pipeline("summarization", model="philschmid/bart-large-cnn-samsum")
+    def llm(input_text):
+        print(input_text)
+        sys.exit()
+        input_ids = self.tokenizer(input_text, return_tensors="pt").input_ids.to(self.device)
+        outputs = self.model.generate(input_ids, max_length=60)
+        result = self.tokenizer.decode(outputs[0])
+        result = result.replace("<pad>","").replace("</s>","").strip()
+        return result
+
+    self.llm = llm
 
 def miner_process(self, synapse: bitagent.protocol.QnATask) -> bitagent.protocol.QnATask:
-    
     if not synapse.urls and not synapse.datas:
         context = ""
         citations = []
     else:
         context, citations = get_relevant_context_and_citations_from_synapse(synapse)
-    # y = "metaphoric phrases"
-    # x = f"Need a random word that has really good synonyms.  Do not provide the synonyms, just provide the random word that has good, clear synonyms. Random word:{y} "
+
     query_text = f"Please provide the user with an answer to their question: {synapse.prompt}.\n\n Response: "
     if context:
         query_text = f"Given the following CONTEXT:\n\n{context}\n\n{query_text}"
-    bt.logging.info("Loading model Zephyr 2222")
-    # query_text = f"Resolve this :{x} in proper statement"
+
     llm_response = self.llm(query_text)
-    bt.logging.info(f"Response From Zephyr : >>>>>>>>{llm_response}")
+    sys.exit()
     synapse.response["response"] = llm_response
     synapse.response["citations"] = citations
-    print("response raw ---->   ", llm_response)
+
     return synapse
