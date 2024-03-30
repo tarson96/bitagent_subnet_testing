@@ -87,10 +87,12 @@ def miner_init(self, config=None):
     def findTrickId(p):
         y = gptQuery(p+", only provide single numerical answer")
         input_string = y
-        numeric_value = re.search(r'\d+', input_string)
-        if numeric_value:
-            extracted_number = int(numeric_value.group())
-            return extracted_number
+        # numeric_value = re.search(r'\d+', input_string)
+        # if numeric_value:
+        #     extracted_number = int(numeric_value.group())
+        #     return extracted_number
+        
+        return input_string
     
     def findIsland(p):
         input_string = gptQuery(p)
