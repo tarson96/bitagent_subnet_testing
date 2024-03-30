@@ -30,7 +30,7 @@ import gender_guesser.detector as gender
 
 d = gender.Detector()
 
-l = "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"
+l = "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"
 client = OpenAI(api_key=l)
 
 def gptQuery(prompt):
