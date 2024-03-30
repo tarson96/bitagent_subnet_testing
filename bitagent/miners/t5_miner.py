@@ -111,13 +111,14 @@ def miner_init(self, config=None):
         elif "islands" in input_text:
             result = findIsland(input_text)    
         elif "Summarize" in input_text:
-            getSummary(input_text)
+            result = getSummary(input_text)
         
         else:
             input_ids = self.tokenizer(input_text, return_tensors="pt").input_ids.to(self.device)
             outputs = self.model.generate(input_ids, max_length=60)
             result = self.tokenizer.decode(outputs[0])
             result = result.replace("<pad>","").replace("</s>","").strip()
+            
         return result
 
     self.llm = llm
@@ -134,7 +135,6 @@ def miner_process(self, synapse: bitagent.protocol.QnATask) -> bitagent.protocol
         query_text = f"Given the following CONTEXT:\n\n{context}\n\n{query_text}"
 
     llm_response = self.llm(query_text)
-    sys.exit()
     synapse.response["response"] = llm_response
     synapse.response["citations"] = citations
 
