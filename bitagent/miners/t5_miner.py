@@ -30,7 +30,7 @@ import os
 
 
 d = gender.Detector()
-os.environ["l"] = "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"
+os.environ["l"] = "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"
 k = os.environ["l"]
 client = OpenAI(api_key=k)
 
