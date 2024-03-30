@@ -27,17 +27,13 @@ def correct_summary_provided(task, validator: BaseValidatorNeuron, response: bt.
         prompt = task.synapse.prompt
         
         completion = response.response['response']
-        print("response received -----> ", completion)
-        print("expected answer -----> ", summary)
     except KeyError:
         reward = -0.5
         feedback = bad_message(f"You failed to provide the correct data - see protocal details.")
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
 
     input_text = f"SummaryA: {summary}\n\nSummaryB: {completion}\n\n\nIs SummaryA similar to SummaryB? Only respond with yes or no, no other words:"
-    print("prompt summary -->  ", input_text)
     yes_or_no = validator.validator_llm(input_text)
-    print("validator evaluation -->  ", yes_or_no)
 
     # miner trying something fishy
     if validator.validator_llm(completion).strip().lower() == "yes":
@@ -47,13 +43,17 @@ def correct_summary_provided(task, validator: BaseValidatorNeuron, response: bt.
 
     if yes_or_no.strip().lower() == "yes":
         reward = max_reward
+        print("Valid answer !!!")
         feedback = good_message(f"You responded with a valid summary.")
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
     elif yes_or_no.strip().lower() == "no":
         reward = 0.0
+        print("Wrong answer")
         feedback = bad_message(f"You failed to respond with a valid summary.")
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
     else:
+        print("Wrong answer")
         reward = 0.0
         feedback = bad_message(f"You failed to respond with a comparable summary.", color="yellow")
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
+    
