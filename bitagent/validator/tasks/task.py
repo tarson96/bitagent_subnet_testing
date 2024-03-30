@@ -60,7 +60,7 @@ def get_random_task(validator: BaseValidatorNeuron) -> Task:
     seed = int(round(validator.block/10))*10
     random.seed(seed)  
     # choice = random.choices([1,2,3,4,5,6,7,8], weights=[0,1,1,1,4,24,4,0])[0]
-    choice = 6
+    choice = 7
     no_task_selected = True
     while no_task_selected:
         try:
