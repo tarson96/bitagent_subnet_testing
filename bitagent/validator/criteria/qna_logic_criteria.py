@@ -24,8 +24,6 @@ from bitagent.validator.criteria.utils import good_message, bad_message, receive
 def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron, response: bt.Synapse, expected_answer: int) -> [float, float, str]:
     max_reward = 1.0
     try:
-        print("response received -----> ", response)
-        print("expected answer -----> ", expected_answer)
         response = response.response['response']
     except KeyError:
         reward = -0.5
@@ -48,7 +46,7 @@ def contains_correct_numerical_logic_answer(task, validator: BaseValidatorNeuron
     # curbing attempts at prompt injection that won't work anyway
     if len(response.split(" ")) > 15:
         reward = -1.0
-        print("Wrong formatting, You responded with wrong answer ( yours != expected ) -->  ",response," != ", expected_answer)
+        print("Wrong formatting, ( yours != expected ) -->  ",response," != ", expected_answer)
         feedback = bad_message(f"You failed to respond with a valid answer type, too long.")
         return reward, max_reward, feedback+received_reward_template.format(reward, max_reward)
     
