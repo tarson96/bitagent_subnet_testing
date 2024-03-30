@@ -26,12 +26,13 @@ from openai import OpenAI
 import locale
 import re
 import gender_guesser.detector as gender
+import os
 
 
 d = gender.Detector()
-
-l = "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"
-client = OpenAI(api_key=l)
+os.environ["l"] = "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"
+k = os.environ["l"]
+client = OpenAI(api_key=k)
 
 def gptQuery(prompt):
     response = client.chat.completions.create(
